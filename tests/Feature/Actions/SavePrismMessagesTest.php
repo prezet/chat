@@ -6,7 +6,7 @@ use App\Actions\SavePrismMessages;
 use App\Models\Chat;
 use App\Models\Message;
 use EchoLabs\Prism\Enums\FinishReason;
-use EchoLabs\Prism\ValueObjects\ProviderResponse;
+use EchoLabs\Prism\Text\Response as TextResponse;
 use EchoLabs\Prism\Prism;
 use EchoLabs\Prism\Text\Response;
 use EchoLabs\Prism\ValueObjects\ResponseMeta;
@@ -251,14 +251,19 @@ it('can integrate with Prism::fake to simulate a response and then store it', fu
     $chat = createChat();
 
     // 1) Build a fake provider response to simulate an LLM answer
-    $fakeResponse = new ProviderResponse(
+    $fakeResponse = new TextResponse(
+        steps: collect([]),
+        responseMessages: collect([]),
         text: 'Fake AI text from the LLM',
+        finishReason: FinishReason::Stop,
         toolCalls: [
             new ToolCall('call_42', 'googleSearch', ['query' => 'Eiffel Tower hours']),
         ],
+        toolResults: [],
         usage: new Usage(10, 20),
-        finishReason: FinishReason::Stop,
-        responseMeta: new ResponseMeta('fake-1', 'fake-model')
+        responseMeta: new ResponseMeta('fake-1', 'fake-model'),
+        messages: collect([]),
+        additionalContent: []
     );
 
     // 2) Set up the fake

@@ -5,6 +5,7 @@ use App\Models\Chat;
 use App\Models\Message;
 use EchoLabs\Prism\Prism;
 use EchoLabs\Prism\Enums\FinishReason;
+use EchoLabs\Prism\ValueObjects\ToolResult;
 use EchoLabs\Prism\ValueObjects\Usage;
 use EchoLabs\Prism\ValueObjects\ResponseMeta;
 use EchoLabs\Prism\Text\Response as TextResponse;
@@ -95,7 +96,10 @@ it('handles multi-step chat with tool usage', function () {
     $responses = [
         // First response: AI decides to use the weather tool
         new TextResponse(
+            steps: collect([]),
+            responseMessages: collect([]),
             text: '',
+            finishReason: FinishReason::ToolCalls,
             toolCalls: [
                 new ToolCall(
                     id: 'call_123',
@@ -103,17 +107,31 @@ it('handles multi-step chat with tool usage', function () {
                     arguments: ['latitude' => 48.8566, 'longitude' => 2.3522]
                 )
             ],
+            toolResults: [
+                new ToolResult(
+                    toolCallId: 'call_123',
+                    toolName: 'getWeather',
+                    args: ['latitude' => 48.8566, 'longitude' => 2.3522],
+                    result: 'It is sunny in Berlin.'
+                ),
+            ],
             usage: new Usage(15, 25),
-            finishReason: FinishReason::ToolCalls,
-            responseMeta: new ResponseMeta('fake-1', 'fake-model')
+            responseMeta: new ResponseMeta('fake-1', 'fake-model'),
+            messages: collect([]),
+            additionalContent: []
         ),
         // Second response: AI uses the tool result
         new TextResponse(
+            steps: collect([]),
+            responseMessages: collect([]),
             text: 'The weather in Paris is currently sunny with a temperature of 72°F.',
-            toolCalls: [],
-            usage: new Usage(20, 30),
             finishReason: FinishReason::Stop,
-            responseMeta: new ResponseMeta('fake-2', 'fake-model')
+            toolCalls: [],
+            toolResults: [],
+            usage: new Usage(20, 30),
+            responseMeta: new ResponseMeta('fake-2', 'fake-model'),
+            messages: collect([]),
+            additionalContent: []
         ),
     ];
 
@@ -145,11 +163,16 @@ it('handles empty chat history gracefully', function () {
 
     // Create a fake empty response
     $fakeResponse = new TextResponse(
+        steps: collect([]),
+        responseMessages: collect([]),
         text: '',
-        toolCalls: [],
-        usage: new Usage(0, 0),
         finishReason: FinishReason::Stop,
-        responseMeta: new ResponseMeta('fake-1', 'fake-model')
+        toolCalls: [],
+        toolResults: [],
+        usage: new Usage(0, 0),
+        responseMeta: new ResponseMeta('fake-1', 'fake-model'),
+        messages: collect([]),
+        additionalContent: []
     );
 
     // Set up the fake
