@@ -32,7 +32,7 @@ it('omits the finish message part when finish reason is ToolCalls', function () 
             'id' => '123',
             'content' => 'Hello World',
             'parts' => [],
-            'metadata' => ['finishReason' => 'ToolCalls']
+            'metadata' => ['finishReason' => 'ToolCalls'],
         ])
         ->make();
 

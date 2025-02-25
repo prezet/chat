@@ -3,37 +3,52 @@
 namespace App\Actions;
 
 use App\Models\Message;
-use Illuminate\Support\Collection;
-use Illuminate\Support\LazyCollection;
 
 class GetMessageStream
 {
     /*
      * Protocol part prefixes.
      */
-    private const PREFIX_START_STEP      = 'f:';
-    private const PREFIX_TEXT            = '0:';
-    private const PREFIX_TOOL_START      = 'b:';
-    private const PREFIX_TOOL_DELTA      = 'c:';
-    private const PREFIX_TOOL_CALL       = '9:';
-    private const PREFIX_TOOL_RESULT     = 'a:';
-    private const PREFIX_DATA            = '2:';
-    private const PREFIX_ERROR           = '3:';
-    private const PREFIX_ANNOTATION      = '8:';
-    private const PREFIX_REASONING       = 'g:';
-    private const PREFIX_FINISH_STEP     = 'e:';
-    private const PREFIX_FINISH_MESSAGE  = 'd:';
+    private const PREFIX_START_STEP = 'f:';
+
+    private const PREFIX_TEXT = '0:';
+
+    private const PREFIX_TOOL_START = 'b:';
+
+    private const PREFIX_TOOL_DELTA = 'c:';
+
+    private const PREFIX_TOOL_CALL = '9:';
+
+    private const PREFIX_TOOL_RESULT = 'a:';
+
+    private const PREFIX_DATA = '2:';
+
+    private const PREFIX_ERROR = '3:';
+
+    private const PREFIX_ANNOTATION = '8:';
+
+    private const PREFIX_REASONING = 'g:';
+
+    private const PREFIX_FINISH_STEP = 'e:';
+
+    private const PREFIX_FINISH_MESSAGE = 'd:';
 
     /*
      * Vercel AI SDK finish reasons
      */
-    private const FINISH_REASON_STOP           = 'stop';
-    private const FINISH_REASON_LENGTH         = 'length';
+    private const FINISH_REASON_STOP = 'stop';
+
+    private const FINISH_REASON_LENGTH = 'length';
+
     private const FINISH_REASON_CONTENT_FILTER = 'content-filter';
-    private const FINISH_REASON_TOOL_CALLS     = 'tool-calls';
-    private const FINISH_REASON_ERROR          = 'error';
-    private const FINISH_REASON_OTHER          = 'other';
-    private const FINISH_REASON_UNKNOWN        = 'unknown';
+
+    private const FINISH_REASON_TOOL_CALLS = 'tool-calls';
+
+    private const FINISH_REASON_ERROR = 'error';
+
+    private const FINISH_REASON_OTHER = 'other';
+
+    private const FINISH_REASON_UNKNOWN = 'unknown';
 
     /**
      * Map Prism finish reasons to Vercel AI SDK finish reasons
@@ -60,13 +75,12 @@ class GetMessageStream
      *   3. Finish Step Part (e:): Marks the end of the step.
      *   4. If finishReason is not tool-calls, add Finish Message Part (d:) to signal the end.
      *
-     * @param Message $message
      * @return array<string>
      */
     public static function handle(Message $message): array
     {
         $lines = [];
-        
+
         // 1. Start Step Part: Notify the beginning of processing for this message.
         $lines[] = self::formatStartStep($message->id);
 
@@ -91,7 +105,7 @@ class GetMessageStream
         $lines[] = self::formatFinishStep($finishReason, $usage, $isContinued);
 
         // 4. Add Finish Message Part if this is the final message (not a tool call)
-        if (!$isContinued) {
+        if (! $isContinued) {
             $lines[] = self::formatFinishMessage($finishReason, $usage);
         }
 
@@ -103,7 +117,7 @@ class GetMessageStream
      */
     private static function formatStartStep(string $messageId): string
     {
-        return self::PREFIX_START_STEP . json_encode(['messageId' => $messageId]);
+        return self::PREFIX_START_STEP.json_encode(['messageId' => $messageId]);
     }
 
     /**
@@ -111,7 +125,7 @@ class GetMessageStream
      */
     private static function formatTextPart(string $text): string
     {
-        return self::PREFIX_TEXT . json_encode($text);
+        return self::PREFIX_TEXT.json_encode($text);
     }
 
     /**
@@ -119,7 +133,7 @@ class GetMessageStream
      */
     private static function formatDataPart(array $data): string
     {
-        return self::PREFIX_DATA . json_encode($data);
+        return self::PREFIX_DATA.json_encode($data);
     }
 
     /**
@@ -127,7 +141,7 @@ class GetMessageStream
      */
     private static function formatErrorPart(string $errorMessage): string
     {
-        return self::PREFIX_ERROR . json_encode($errorMessage);
+        return self::PREFIX_ERROR.json_encode($errorMessage);
     }
 
     /**
@@ -135,7 +149,7 @@ class GetMessageStream
      */
     private static function formatAnnotationPart(array $annotations): string
     {
-        return self::PREFIX_ANNOTATION . json_encode($annotations);
+        return self::PREFIX_ANNOTATION.json_encode($annotations);
     }
 
     /**
@@ -143,22 +157,22 @@ class GetMessageStream
      */
     private static function formatReasoningPart(string $reasoning): string
     {
-        return self::PREFIX_REASONING . json_encode($reasoning);
+        return self::PREFIX_REASONING.json_encode($reasoning);
     }
 
     /**
      * Format the finish step part.
      *
-     * @param string $finishReason The finish reason from metadata
-     * @param array $usage The usage metrics from metadata
-     * @param bool $isContinued Whether this step continues to the next one
+     * @param  string  $finishReason  The finish reason from metadata
+     * @param  array  $usage  The usage metrics from metadata
+     * @param  bool  $isContinued  Whether this step continues to the next one
      */
     private static function formatFinishStep(string $finishReason, array $usage, bool $isContinued): string
     {
-        return self::PREFIX_FINISH_STEP . json_encode([
+        return self::PREFIX_FINISH_STEP.json_encode([
             'finishReason' => $finishReason,
             'usage' => [
-                'promptTokens'     => $usage['promptTokens'] ?? 0,
+                'promptTokens' => $usage['promptTokens'] ?? 0,
                 'completionTokens' => $usage['completionTokens'] ?? 0,
             ],
             'isContinued' => $isContinued,
@@ -170,10 +184,10 @@ class GetMessageStream
      */
     private static function formatFinishMessage(string $finishReason, array $usage): string
     {
-        return self::PREFIX_FINISH_MESSAGE . json_encode([
+        return self::PREFIX_FINISH_MESSAGE.json_encode([
             'finishReason' => $finishReason,
             'usage' => [
-                'promptTokens'     => $usage['promptTokens'] ?? 0,
+                'promptTokens' => $usage['promptTokens'] ?? 0,
                 'completionTokens' => $usage['completionTokens'] ?? 0,
             ],
         ]);
@@ -182,7 +196,6 @@ class GetMessageStream
     /**
      * Process an individual part based on its type.
      *
-     * @param array $part
      * @return array<string> The stream lines for this part.
      */
     private static function processPart(array $part): array
@@ -217,7 +230,7 @@ class GetMessageStream
 
             default:
                 // Fallback: if the part type is unrecognized but contains text, use it as a text part.
-                if (!empty($part['text'])) {
+                if (! empty($part['text'])) {
                     $lines[] = self::formatTextPart($part['text']);
                 }
                 break;
@@ -231,7 +244,6 @@ class GetMessageStream
      *
      * Depending on the 'state', the tool invocation may result in one or more stream lines.
      *
-     * @param array $invocation
      * @return array<string>
      */
     private static function processToolInvocation(array $invocation): array
@@ -241,32 +253,32 @@ class GetMessageStream
 
         switch ($state) {
             case 'streamStart':
-                $lines[] = self::PREFIX_TOOL_START . json_encode([
-                        'toolCallId' => $invocation['toolCallId'] ?? 'call_' . uniqid(),
-                        'toolName'   => $invocation['toolName'] ?? 'unknownTool',
-                    ]);
+                $lines[] = self::PREFIX_TOOL_START.json_encode([
+                    'toolCallId' => $invocation['toolCallId'] ?? 'call_'.uniqid(),
+                    'toolName' => $invocation['toolName'] ?? 'unknownTool',
+                ]);
                 break;
 
             case 'partial-call':
-                $lines[] = self::PREFIX_TOOL_DELTA . json_encode([
-                        'toolCallId'    => $invocation['toolCallId'] ?? 'call_' . uniqid(),
-                        'argsTextDelta' => $invocation['argsTextDelta'] ?? '',
-                    ]);
+                $lines[] = self::PREFIX_TOOL_DELTA.json_encode([
+                    'toolCallId' => $invocation['toolCallId'] ?? 'call_'.uniqid(),
+                    'argsTextDelta' => $invocation['argsTextDelta'] ?? '',
+                ]);
                 break;
 
             case 'call':
-                $lines[] = self::PREFIX_TOOL_CALL . json_encode([
-                        'toolCallId' => $invocation['toolCallId'],
-                        'toolName'   => $invocation['toolName'] ?? 'unknownTool',
-                        'args'       => $invocation['args'] ?? (object) [],
-                    ]);
+                $lines[] = self::PREFIX_TOOL_CALL.json_encode([
+                    'toolCallId' => $invocation['toolCallId'],
+                    'toolName' => $invocation['toolName'] ?? 'unknownTool',
+                    'args' => $invocation['args'] ?? (object) [],
+                ]);
                 break;
 
             case 'result':
-                $lines[] = self::PREFIX_TOOL_RESULT . json_encode([
-                        'toolCallId' => $invocation['toolCallId'],
-                        'result'     => $invocation['result'] ?? (object) [],
-                    ]);
+                $lines[] = self::PREFIX_TOOL_RESULT.json_encode([
+                    'toolCallId' => $invocation['toolCallId'],
+                    'result' => $invocation['result'] ?? (object) [],
+                ]);
                 break;
         }
 

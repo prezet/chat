@@ -11,7 +11,9 @@ class Chat extends Model
     use HasUuids;
 
     protected $table = 'chats';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [

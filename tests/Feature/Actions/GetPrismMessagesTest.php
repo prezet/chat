@@ -3,10 +3,10 @@
 use App\Actions\GetPrismMessages;
 use App\Models\Chat;
 use App\Models\Message;
-use EchoLabs\Prism\ValueObjects\Messages\SystemMessage;
-use EchoLabs\Prism\ValueObjects\Messages\UserMessage;
 use EchoLabs\Prism\ValueObjects\Messages\AssistantMessage;
+use EchoLabs\Prism\ValueObjects\Messages\SystemMessage;
 use EchoLabs\Prism\ValueObjects\Messages\ToolResultMessage;
+use EchoLabs\Prism\ValueObjects\Messages\UserMessage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
@@ -18,46 +18,46 @@ it('converts a chat with system, user, and assistant messages with tool parts in
 
     // Create a system message.
     Message::create([
-        'id'      => (string) Str::uuid(),
+        'id' => (string) Str::uuid(),
         'chat_id' => $chat->id,
-        'role'    => 'system',
+        'role' => 'system',
         'content' => 'System content example',
-        'parts'   => [],
+        'parts' => [],
     ]);
 
     // Create a user message.
     Message::create([
-        'id'      => (string) Str::uuid(),
+        'id' => (string) Str::uuid(),
         'chat_id' => $chat->id,
-        'role'    => 'user',
+        'role' => 'user',
         'content' => 'User question',
-        'parts'   => [],
+        'parts' => [],
     ]);
 
     // Create an assistant message that includes both a tool call and a tool result.
     Message::create([
-        'id'      => (string) Str::uuid(),
+        'id' => (string) Str::uuid(),
         'chat_id' => $chat->id,
-        'role'    => 'assistant',
+        'role' => 'assistant',
         'content' => 'Assistant answer',
-        'parts'   => [
+        'parts' => [
             [
                 'type' => 'tool-invocation',
                 'toolInvocation' => [
-                    'state'      => 'call',
+                    'state' => 'call',
                     'toolCallId' => 'call_1',
-                    'toolName'   => 'search',
-                    'args'       => ['query' => 'Latest news'],
+                    'toolName' => 'search',
+                    'args' => ['query' => 'Latest news'],
                 ],
             ],
             [
                 'type' => 'tool-invocation',
                 'toolInvocation' => [
-                    'state'      => 'result',
+                    'state' => 'result',
                     'toolCallId' => 'call_1',
-                    'toolName'   => 'search',
-                    'args'       => ['query' => 'Latest news'],
-                    'result'     => ['articles' => ['Article 1', 'Article 2']],
+                    'toolName' => 'search',
+                    'args' => ['query' => 'Latest news'],
+                    'result' => ['articles' => ['Article 1', 'Article 2']],
                 ],
             ],
         ],
@@ -91,11 +91,11 @@ it('converts an assistant message without tool invocations into a single Prism m
     $chat = Chat::create(['id' => (string) Str::uuid()]);
 
     Message::create([
-        'id'      => (string) Str::uuid(),
+        'id' => (string) Str::uuid(),
         'chat_id' => $chat->id,
-        'role'    => 'assistant',
+        'role' => 'assistant',
         'content' => 'Assistant answer without tools',
-        'parts'   => [], // No tool parts
+        'parts' => [], // No tool parts
     ]);
 
     $messages = app(GetPrismMessages::class)->handle($chat);
@@ -110,25 +110,25 @@ it('maintains the correct order of messages', function () {
 
     // Create messages in a specific order.
     Message::create([
-        'id'      => (string) Str::uuid(),
+        'id' => (string) Str::uuid(),
         'chat_id' => $chat->id,
-        'role'    => 'system',
+        'role' => 'system',
         'content' => 'System message',
-        'parts'   => [],
+        'parts' => [],
     ]);
     Message::create([
-        'id'      => (string) Str::uuid(),
+        'id' => (string) Str::uuid(),
         'chat_id' => $chat->id,
-        'role'    => 'user',
+        'role' => 'user',
         'content' => 'User message',
-        'parts'   => [],
+        'parts' => [],
     ]);
     Message::create([
-        'id'      => (string) Str::uuid(),
+        'id' => (string) Str::uuid(),
         'chat_id' => $chat->id,
-        'role'    => 'assistant',
+        'role' => 'assistant',
         'content' => 'Assistant message with no tools',
-        'parts'   => [],
+        'parts' => [],
     ]);
 
     $messages = app(GetPrismMessages::class)->handle($chat);

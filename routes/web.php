@@ -13,9 +13,8 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 });
 
-
 Route::get('/demo', function () {
-    $chat = new Chat();
+    $chat = new Chat;
     $chat->save();
 
     return redirect()->route('demo', ['id' => $chat->id]);
@@ -34,7 +33,6 @@ Route::get('/demo/{id}', function ($id) {
     ]);
 })->name('demo');
 
-
 Route::get('/stream/{id}', function ($id) {
     $chat = Chat::findOrFail($id);
 
@@ -50,8 +48,6 @@ Route::get('/stream/{id}', function ($id) {
 
 Route::post('/chat-stream', [ChatStreamController::class, 'handleChat'])->name('chat-stream');
 Route::post('/chat', [ChatController::class, 'handleChat'])->name('chat');
-
-
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

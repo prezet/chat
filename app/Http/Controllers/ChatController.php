@@ -7,9 +7,6 @@ use App\Actions\RunChat;
 use App\Actions\SaveIncomingMessages;
 use App\Models\Chat;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\LazyCollection;
 
 class ChatController extends Controller
 {
@@ -56,7 +53,7 @@ class ChatController extends Controller
     protected function sendStreamLines(array $stream)
     {
         foreach ($stream as $line) {
-            echo $line . "\n";
+            echo $line."\n";
             ob_flush();
             flush();
         }

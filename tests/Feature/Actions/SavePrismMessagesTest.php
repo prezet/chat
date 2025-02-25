@@ -6,16 +6,16 @@ use App\Actions\SavePrismMessages;
 use App\Models\Chat;
 use App\Models\Message;
 use EchoLabs\Prism\Enums\FinishReason;
-use EchoLabs\Prism\Text\Response as TextResponse;
 use EchoLabs\Prism\Prism;
 use EchoLabs\Prism\Text\Response;
+use EchoLabs\Prism\Text\Response as TextResponse;
 use EchoLabs\Prism\ValueObjects\ResponseMeta;
 use EchoLabs\Prism\ValueObjects\ToolCall;
 use EchoLabs\Prism\ValueObjects\ToolResult;
 use EchoLabs\Prism\ValueObjects\Usage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
@@ -29,7 +29,7 @@ function createChat(): Chat
 
 function createSaveAction(): SavePrismMessages
 {
-    return new SavePrismMessages();
+    return new SavePrismMessages;
 }
 
 it('stores final LLM text as an assistant message when no tool results exist', function () {

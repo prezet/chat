@@ -1,8 +1,8 @@
 <?php
 
 use App\Actions\SaveIncomingMessages;
-use App\Models\Message;
 use App\Models\Chat;
+use App\Models\Message;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
@@ -13,15 +13,15 @@ it('saves new incoming messages to the database', function () {
 
     $incomingMessages = [
         [
-            'id'        => (string) Str::uuid(),
-            'role'      => 'user',
-            'content'   => 'Test message',
+            'id' => (string) Str::uuid(),
+            'role' => 'user',
+            'content' => 'Test message',
             'createdAt' => now(),
         ],
         [
-            'id'        => (string) Str::uuid(),
-            'role'      => 'assistant',
-            'content'   => 'Response message',
+            'id' => (string) Str::uuid(),
+            'role' => 'assistant',
+            'content' => 'Response message',
             'createdAt' => now()->addMinute(),
         ],
     ];
@@ -50,25 +50,25 @@ it('does not duplicate messages that already exist', function () {
 
     // Pre-create an existing message.
     Message::create([
-        'id'         => $existingMessageId,
-        'chat_id'    => $chat->id,
-        'role'       => 'user',
-        'content'    => 'Existing message',
-        'parts'      => ['text' => 'Existing message'],
+        'id' => $existingMessageId,
+        'chat_id' => $chat->id,
+        'role' => 'user',
+        'content' => 'Existing message',
+        'parts' => ['text' => 'Existing message'],
         'created_at' => now(),
     ]);
 
     $incomingMessages = [
         [
-            'id'        => $existingMessageId, // duplicate entry
-            'role'      => 'user',
-            'content'   => 'Existing message',
+            'id' => $existingMessageId, // duplicate entry
+            'role' => 'user',
+            'content' => 'Existing message',
             'createdAt' => now()->toISOString(),
         ],
         [
-            'id'        => (string) Str::uuid(), // new message
-            'role'      => 'assistant',
-            'content'   => 'New message',
+            'id' => (string) Str::uuid(), // new message
+            'role' => 'assistant',
+            'content' => 'New message',
             'createdAt' => now()->addMinute()->toISOString(),
         ],
     ];

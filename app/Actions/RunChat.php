@@ -3,17 +3,16 @@
 namespace App\Actions;
 
 use App\Models\Chat;
-use App\Tools\WeatherTool;
-use EchoLabs\Prism\Prism;
-use EchoLabs\Prism\Enums\Provider;
-use EchoLabs\Prism\Enums\ToolChoice;
-use EchoLabs\Prism\Enums\FinishReason;
-use App\Tools\FlightSearchTool;
+use App\Models\Message;
 use App\Tools\FlightBookingTool;
+use App\Tools\FlightSearchTool;
+use App\Tools\WeatherTool;
+use EchoLabs\Prism\Enums\FinishReason;
+use EchoLabs\Prism\Enums\ToolChoice;
+use EchoLabs\Prism\Prism;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
-use App\Models\Message;
 
 class RunChat
 {
@@ -21,16 +20,13 @@ class RunChat
      * Process the chat in multiple steps.
      * Returns a lazy collection that yields messages as they are saved.
      * The final message will have a special 'is_final' property set to true.
-     *
-     * @param Chat $chat
-     * @return LazyCollection
      */
     public static function handle(Chat $chat): LazyCollection
     {
-//        $searchTool = new FlightSearchTool();
-//        $bookTool   = new FlightBookingTool();
+        //        $searchTool = new FlightSearchTool();
+        //        $bookTool   = new FlightBookingTool();
         return LazyCollection::make(function () use ($chat) {
-            $weatherTool = new WeatherTool();
+            $weatherTool = new WeatherTool;
             $maxSteps = 5;
 
             for ($step = 1; $step <= $maxSteps; $step++) {
@@ -65,10 +61,6 @@ class RunChat
 
     /**
      * Create an error message instance.
-     *
-     * @param Chat $chat
-     * @param \Exception $e
-     * @return Message
      */
     protected static function makeErrorMessage(Chat $chat, \Exception $e): Message
     {
@@ -80,13 +72,13 @@ class RunChat
             'parts' => [
                 [
                     'type' => 'error',
-                    'message' => $e->getMessage()
-                ]
+                    'message' => $e->getMessage(),
+                ],
             ],
             'metadata' => [
                 'finishReason' => 'Error',
                 'usage' => ['promptTokens' => 0, 'completionTokens' => 0],
-            ]
+            ],
         ]);
     }
 }

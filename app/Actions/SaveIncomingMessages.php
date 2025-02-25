@@ -9,9 +9,7 @@ class SaveIncomingMessages
     /**
      * Merge new messages from the client with the database
      *
-     * @param  string  $chatId
-     * @param  array   $incomingMessages  - array of messages from the client
-     * @return void
+     * @param  array  $incomingMessages  - array of messages from the client
      */
     public static function handle(string $chatId, array $incomingMessages): void
     {
@@ -23,21 +21,21 @@ class SaveIncomingMessages
 
         // 2. Insert any new messages
         foreach ($incomingMessages as $msg) {
-            if($existingMessages->has($msg['id'])){
+            if ($existingMessages->has($msg['id'])) {
                 continue;
             }
 
             // Create a new record
             $newMessage = new Message([
-                'id'        => $msg['id'],
-                'chat_id'   => $chatId,
-                'role'      => $msg['role'],
-                'content'   => $msg['content'],
+                'id' => $msg['id'],
+                'chat_id' => $chatId,
+                'role' => $msg['role'],
+                'content' => $msg['content'],
                 // new client messages only have text parts
-                'parts'     => [
-                    ['text' => $msg['content']]
+                'parts' => [
+                    ['text' => $msg['content']],
                 ],
-                'created_at'=> $msg['createdAt'],
+                'created_at' => $msg['createdAt'],
             ]);
             $newMessage->save();
         }

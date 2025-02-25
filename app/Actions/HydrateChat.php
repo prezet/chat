@@ -9,8 +9,7 @@ class HydrateChat
     /**
      * Return all messages in the shape required by the AI SDK.
      *
-     * @param  string  $chatId
-     * @return array   - final collection of messages with tool invocations merged
+     * @return array - final collection of messages with tool invocations merged
      */
     public static function handle(string $chatId): array
     {
@@ -21,11 +20,11 @@ class HydrateChat
         // Transform each message to match the AI SDK shape
         return $messages->map(function (Message $msg) {
             return [
-                'id'        => $msg->id,
-                'role'      => $msg->role,
-                'content'   => $msg->content,
+                'id' => $msg->id,
+                'role' => $msg->role,
+                'content' => $msg->content,
                 'createdAt' => $msg->created_at->toISOString(),
-                'parts'     => $msg->parts,
+                'parts' => $msg->parts,
             ];
         })->toArray();
     }

@@ -3,8 +3,8 @@
 namespace App\Tools;
 
 use EchoLabs\Prism\Tool;
-use Illuminate\Support\Facades\Http;
 use Exception;
+use Illuminate\Support\Facades\Http;
 
 class WeatherTool extends Tool
 {
@@ -37,7 +37,7 @@ class WeatherTool extends Tool
             'timezone' => 'auto',
         ]);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             throw new Exception('Failed to fetch weather data');
         }
 

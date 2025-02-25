@@ -4,10 +4,10 @@ namespace App\Actions;
 
 use App\Models\Chat;
 use ArrayObject;
-use EchoLabs\Prism\ValueObjects\Messages\SystemMessage;
-use EchoLabs\Prism\ValueObjects\Messages\UserMessage;
 use EchoLabs\Prism\ValueObjects\Messages\AssistantMessage;
+use EchoLabs\Prism\ValueObjects\Messages\SystemMessage;
 use EchoLabs\Prism\ValueObjects\Messages\ToolResultMessage;
+use EchoLabs\Prism\ValueObjects\Messages\UserMessage;
 use EchoLabs\Prism\ValueObjects\ToolCall;
 use EchoLabs\Prism\ValueObjects\ToolResult;
 
@@ -42,7 +42,7 @@ class GetPrismMessages
 
                     // If any tool results exist, add a separate message for them.
                     $toolResults = self::getToolResults($message->parts);
-                    if (!empty($toolResults)) {
+                    if (! empty($toolResults)) {
                         $results[] = new ToolResultMessage($toolResults);
                     }
                     break;
@@ -57,13 +57,13 @@ class GetPrismMessages
         $toolCalls = [];
 
         foreach ($parts as $part) {
-            if($part['type'] !== 'tool-invocation') {
+            if ($part['type'] !== 'tool-invocation') {
                 continue;
             }
 
             $toolInvocation = $part['toolInvocation'];
 
-            if($toolInvocation['state'] !== 'call') {
+            if ($toolInvocation['state'] !== 'call') {
                 continue;
             }
 
@@ -82,13 +82,13 @@ class GetPrismMessages
         $toolResults = [];
 
         foreach ($parts as $part) {
-            if($part['type'] !== 'tool-invocation') {
+            if ($part['type'] !== 'tool-invocation') {
                 continue;
             }
 
             $toolInvocation = $part['toolInvocation'];
 
-            if($toolInvocation['state'] !== 'result') {
+            if ($toolInvocation['state'] !== 'result') {
                 continue;
             }
 

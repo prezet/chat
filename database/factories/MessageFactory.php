@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Factories;
+
 use App\Models\Message;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -87,7 +88,7 @@ class MessageFactory extends Factory
                     [
                         'type' => 'data',
                         'data' => [
-                            ['key' => 'value']
+                            ['key' => 'value'],
                         ],
                     ],
                 ],

@@ -3,18 +3,18 @@
 use App\Actions\RunChat;
 use App\Models\Chat;
 use App\Models\Message;
-use EchoLabs\Prism\Prism;
 use EchoLabs\Prism\Enums\FinishReason;
+use EchoLabs\Prism\Prism;
+use EchoLabs\Prism\Text\Response as TextResponse;
+use EchoLabs\Prism\ValueObjects\ResponseMeta;
+use EchoLabs\Prism\ValueObjects\ToolCall;
 use EchoLabs\Prism\ValueObjects\ToolResult;
 use EchoLabs\Prism\ValueObjects\Usage;
-use EchoLabs\Prism\ValueObjects\ResponseMeta;
-use EchoLabs\Prism\Text\Response as TextResponse;
-use EchoLabs\Prism\ValueObjects\ToolCall;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Http;
 
 uses(RefreshDatabase::class);
 
@@ -105,7 +105,7 @@ it('handles multi-step chat with tool usage', function () {
                     id: 'call_123',
                     name: 'getWeather',
                     arguments: ['latitude' => 48.8566, 'longitude' => 2.3522]
-                )
+                ),
             ],
             toolResults: [
                 new ToolResult(

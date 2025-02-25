@@ -21,20 +21,20 @@ class SavePrismMessages
     {
         return LazyCollection::make(function () use ($response, $chat) {
             // 1) Save assistant message if text is returned.
-            if (!empty($response->text)) {
+            if (! empty($response->text)) {
                 $assistantMessage = new DbMessage([
-                    'id'      => (string) Str::uuid(),
+                    'id' => (string) Str::uuid(),
                     'chat_id' => $chat->id,
-                    'role'    => 'assistant',
+                    'role' => 'assistant',
                     'content' => $response->text,
-                    'parts'   => [
+                    'parts' => [
                         ['type' => 'text', 'text' => $response->text],
                     ],
                     'metadata' => [
                         'usage' => $response->usage,
                         'finishReason' => $response->finishReason->name,
                         'responseMeta' => $response->responseMeta,
-                    ]
+                    ],
                 ]);
                 $assistantMessage->save();
                 yield $assistantMessage;
@@ -43,16 +43,16 @@ class SavePrismMessages
             // 2) For each tool result, create a data message.
             foreach ($response->toolResults as $key => $toolResult) {
                 $toolCall = $response->toolCalls[$key];
-                $toolCallId = !empty($toolResult->toolCallId)
+                $toolCallId = ! empty($toolResult->toolCallId)
                     ? $toolResult->toolCallId
                     : (string) Str::uuid();
 
                 $dataMessage = new DbMessage([
-                    'id'      => (string) Str::uuid(),
+                    'id' => (string) Str::uuid(),
                     'chat_id' => $chat->id,
-                    'role'    => 'assistant',
-                    'content' => "",
-                    'parts'   => [
+                    'role' => 'assistant',
+                    'content' => '',
+                    'parts' => [
                         $this->buildToolCallPart($toolCall, $toolCallId),
                         $this->buildToolResultPart($toolResult, $toolCallId),
                     ],
@@ -60,7 +60,7 @@ class SavePrismMessages
                         'usage' => $response->usage,
                         'finishReason' => $response->finishReason->name,
                         'responseMeta' => $response->responseMeta,
-                    ]
+                    ],
                 ]);
                 $dataMessage->save();
                 yield $dataMessage;
@@ -74,9 +74,9 @@ class SavePrismMessages
             'type' => 'tool-invocation',
             'toolInvocation' => [
                 'toolCallId' => $toolCallId,
-                'toolName'   => $toolCall->name,
-                'args'       => $toolCall->arguments(),
-                'state'      => 'call',
+                'toolName' => $toolCall->name,
+                'args' => $toolCall->arguments(),
+                'state' => 'call',
             ],
         ];
     }
@@ -84,24 +84,26 @@ class SavePrismMessages
     protected function buildToolResultPart(ToolResult $toolResult, string $toolCallId): array
     {
         $parsed = $this->tryJsonDecode($toolResult->result);
+
         return [
             'type' => 'tool-invocation',
             'toolInvocation' => [
                 'toolCallId' => $toolCallId,
-                'toolName'   => $toolResult->toolName,
-                'state'      => 'result',
-                'result'     => $parsed,
+                'toolName' => $toolResult->toolName,
+                'state' => 'result',
+                'result' => $parsed,
             ],
         ];
     }
 
     protected function tryJsonDecode(mixed $data): mixed
     {
-        if (!is_string($data)) {
+        if (! is_string($data)) {
             return $data;
         }
 
         $decoded = json_decode($data, true);
+
         return $decoded ?? $data;
     }
 }
