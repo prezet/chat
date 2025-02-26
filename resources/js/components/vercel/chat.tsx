@@ -93,7 +93,31 @@ export const ChatPanel = () => {
                                     <VercelIcon size={20} />
                                 </p>
                                 <p>
-                                    This demo uses Vercel's <a target="_blank" className="font-semibold underline cursor-pointer" href="https://sdk.vercel.ai/docs/ai-sdk-ui/overview">AI SDK UI</a> to interact with large language models via a Laravel backend powered by <a target="_blank" className="font-semibold underline cursor-pointer" href="https://prism.echolabs.dev/">Prism</a>. Built on the Laravel <a target="_blank" className="font-semibold underline cursor-pointer" href="https://github.com/laravel/react-starter-kit">React Starter Kit</a> with UI elements taken from Vercel's <a target="_blank" className="font-semibold underline cursor-pointer" href="https://vercel.com/templates/ai">AI Templates</a>.
+                                    This demo uses Vercel's{' '}
+                                    <a
+                                        target="_blank"
+                                        className="cursor-pointer font-semibold underline"
+                                        href="https://sdk.vercel.ai/docs/ai-sdk-ui/overview"
+                                    >
+                                        AI SDK UI
+                                    </a>{' '}
+                                    to interact with large language models via a Laravel backend powered by{' '}
+                                    <a target="_blank" className="cursor-pointer font-semibold underline" href="https://prism.echolabs.dev/">
+                                        Prism
+                                    </a>
+                                    . Built on the Laravel{' '}
+                                    <a
+                                        target="_blank"
+                                        className="cursor-pointer font-semibold underline"
+                                        href="https://github.com/laravel/react-starter-kit"
+                                    >
+                                        React Starter Kit
+                                    </a>{' '}
+                                    with UI elements taken from Vercel's{' '}
+                                    <a target="_blank" className="cursor-pointer font-semibold underline" href="https://vercel.com/templates/ai">
+                                        AI Templates
+                                    </a>
+                                    .
                                 </p>
                             </div>
                         </motion.div>

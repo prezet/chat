@@ -1,4 +1,5 @@
 # Laravel AI Chat Starter Kit
+
 <div align="center">
     <img src="https://github.com/prezet/chat/blob/main/art/chat_dashboard2?raw=true" alt="Chat Screenshot">
     <img src="https://github.com/prezet/chat/blob/main/art/chat_dashboard1?raw=true" alt="Chat Screenshot">
@@ -23,21 +24,21 @@ Follow these steps to set up the starter kit locally:
 
 1. **Clone the repository and navigate to the project directory**:
 
-   ```bash
-   git clone https://github.com/prezet/chat.git && cd chat
-   ```
+    ```bash
+    git clone https://github.com/prezet/chat.git && cd chat
+    ```
 
 2. **Install Composer and NPM dependencies**:
 
-   ```bash
-   composer install && npm install
-   ```
+    ```bash
+    composer install && npm install
+    ```
 
 3. **Copy the .env.example file and configure environment variables**:
 
-   ```bash
-   cp .env.example .env && php artisan key:generate
-   ```
+    ```bash
+    cp .env.example .env && php artisan key:generate
+    ```
 
     Edit the `.env` file to include your database credentials, LLM API keys, and desired LLM settings. For example, to use OpenAI:
 
@@ -53,26 +54,26 @@ Follow these steps to set up the starter kit locally:
     PRISM_PROVIDER=gemini
     PRISM_MODEL=gemini-2.0-flash
     GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-   ```
+    ```
 
-   or to use Ollama:
+    or to use Ollama:
 
     ```bash
     PRISM_PROVIDER=ollama
     PRISM_MODEL=llama3.1
-   ```
+    ```
 
 4. **Run database migrations**:
 
-   ```bash
-   php artisan migrate --seed
-   ```
+    ```bash
+    php artisan migrate --seed
+    ```
 
 5. **Start the development server**:
 
-   ```bash
-   composer run dev
-   ```
+    ```bash
+    composer run dev
+    ```
 
     - This command should launch both the Laravel server and the Vite development server.
 
