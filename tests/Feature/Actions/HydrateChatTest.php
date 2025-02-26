@@ -3,6 +3,7 @@
 use App\Actions\HydrateChat;
 use App\Models\Chat;
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -10,7 +11,7 @@ use Illuminate\Support\Str;
 uses(RefreshDatabase::class);
 
 it('returns an empty array when no messages exist for the chat', function () {
-    $chat = Chat::create(['id' => (string) Str::uuid()]);
+    $chat = Chat::factory()->create();
 
     $result = HydrateChat::handle($chat->id);
 
@@ -19,7 +20,7 @@ it('returns an empty array when no messages exist for the chat', function () {
 
 it('returns messages in the correct shape and order', function () {
     // Create a chat.
-    $chat = Chat::create(['id' => (string) Str::uuid()]);
+    $chat = Chat::factory()->create();
 
     // Create messages with increasing creation times.
     $message1 = Message::create([

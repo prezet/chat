@@ -3,13 +3,14 @@
 use App\Actions\SaveIncomingMessages;
 use App\Models\Chat;
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
 it('saves new incoming messages to the database', function () {
-    $chat = Chat::create(['id' => (string) Str::uuid()]);
+    $chat = Chat::factory()->create();
 
     $incomingMessages = [
         [
@@ -44,7 +45,7 @@ it('saves new incoming messages to the database', function () {
 });
 
 it('does not duplicate messages that already exist', function () {
-    $chat = Chat::create(['id' => (string) Str::uuid()]);
+    $chat = Chat::factory()->create();
 
     $existingMessageId = (string) Str::uuid();
 

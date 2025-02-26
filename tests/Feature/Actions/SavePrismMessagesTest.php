@@ -5,6 +5,7 @@ namespace Tests\Feature\Actions;
 use App\Actions\SavePrismMessages;
 use App\Models\Chat;
 use App\Models\Message;
+use App\Models\User;
 use EchoLabs\Prism\Enums\FinishReason;
 use EchoLabs\Prism\Prism;
 use EchoLabs\Prism\Text\Response;
@@ -24,7 +25,7 @@ uses(RefreshDatabase::class);
  */
 function createChat(): Chat
 {
-    return Chat::create(['id' => (string) Str::uuid()]);
+    return Chat::factory()->create();
 }
 
 function createSaveAction(): SavePrismMessages

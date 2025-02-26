@@ -3,6 +3,7 @@
 use App\Actions\RunChat;
 use App\Models\Chat;
 use App\Models\Message;
+use App\Models\User;
 use EchoLabs\Prism\Enums\FinishReason;
 use EchoLabs\Prism\Prism;
 use EchoLabs\Prism\Text\Response as TextResponse;
@@ -19,7 +20,7 @@ use Illuminate\Support\Str;
 uses(RefreshDatabase::class);
 
 it('processes a simple chat message and returns AI response', function () {
-    $chat = Chat::create(['id' => (string) Str::uuid()]);
+    $chat = Chat::factory()->create();
 
     // Create a test message
     Message::create([
@@ -63,7 +64,7 @@ it('processes a simple chat message and returns AI response', function () {
 });
 
 it('handles multi-step chat with tool usage', function () {
-    $chat = Chat::create(['id' => (string) Str::uuid()]);
+    $chat = Chat::factory()->create();
 
     // Fake the weather API response
     Http::fake([
@@ -159,7 +160,7 @@ it('handles multi-step chat with tool usage', function () {
 });
 
 it('handles empty chat history gracefully', function () {
-    $chat = Chat::create(['id' => (string) Str::uuid()]);
+    $chat = Chat::factory()->create();
 
     // Create a fake empty response
     $fakeResponse = new TextResponse(

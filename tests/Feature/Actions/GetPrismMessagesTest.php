@@ -3,6 +3,7 @@
 use App\Actions\GetPrismMessages;
 use App\Models\Chat;
 use App\Models\Message;
+use App\Models\User;
 use EchoLabs\Prism\ValueObjects\Messages\AssistantMessage;
 use EchoLabs\Prism\ValueObjects\Messages\SystemMessage;
 use EchoLabs\Prism\ValueObjects\Messages\ToolResultMessage;
@@ -14,7 +15,7 @@ uses(RefreshDatabase::class);
 
 it('converts a chat with system, user, and assistant messages with tool parts into Prism messages', function () {
     // Create a chat
-    $chat = Chat::create(['id' => (string) Str::uuid()]);
+    $chat = Chat::factory()->create();
 
     // Create a system message.
     Message::create([
