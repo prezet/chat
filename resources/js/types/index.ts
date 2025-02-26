@@ -38,3 +38,12 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Chat {
+    id: string;
+    name: string | null;
+    user_id: number;
+    created_at: string;
+    updated_at: string;
+    [key: string]: unknown;
+}

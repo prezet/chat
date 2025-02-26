@@ -11,6 +11,8 @@ return new class extends Migration
         // Example 'chats' table
         Schema::create('chats', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('name')->nullable();
+            $table->foreignId('user_id')->index();
             $table->timestampsTz();
         });
 

@@ -5,7 +5,6 @@ namespace Tests\Feature\Actions;
 use App\Actions\SavePrismMessages;
 use App\Models\Chat;
 use App\Models\Message;
-use App\Models\User;
 use EchoLabs\Prism\Enums\FinishReason;
 use EchoLabs\Prism\Prism;
 use EchoLabs\Prism\Text\Response;
@@ -16,7 +15,6 @@ use EchoLabs\Prism\ValueObjects\ToolResult;
 use EchoLabs\Prism\ValueObjects\Usage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 

@@ -1,5 +1,8 @@
 <?php
 
+use App\Actions\HydrateChat;
+use App\Http\Controllers\ChatController;
+use App\Models\Chat;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -7,47 +10,28 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(callback: function () {
     Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
+        $chat = auth()->user()->chats()->create();
+
+        return redirect()->route('dashboard.show', ['chat' => $chat->id]);
     })->name('dashboard');
+
+    Route::get('/dashboard/{chat}', function (Chat $chat) {
+        $user = auth()->user();
+        $initialMessages = HydrateChat::handle($chat->id);
+
+        return Inertia::render('dashboard', [
+            'chatUrl' => route('chat'),
+            'chatId' => $chat->id,
+            'initialMessages' => $initialMessages,
+            'chats' => $user->chats()->orderBy('created_at', 'desc')->get(),
+            '_token' => csrf_token(),
+        ]);
+    })->name('dashboard.show')->middleware();
+
+    Route::post('/chat', [ChatController::class, 'store'])->name('chat');
 });
-
-Route::get('/demo', function () {
-    $chat = new Chat;
-    $chat->save();
-
-    return redirect()->route('demo', ['id' => $chat->id]);
-});
-
-Route::get('/demo/{id}', function ($id) {
-    $chat = Chat::findOrFail($id);
-
-    $initialMessages = HydrateChat::handle($id);
-
-    return Inertia::render('Welcome', [
-        '_token' => csrf_token(),
-        'chatUrl' => route('chat'),
-        'chatId' => $chat->id,
-        'initialMessages' => $initialMessages,
-    ]);
-})->name('demo');
-
-Route::get('/stream/{id}', function ($id) {
-    $chat = Chat::findOrFail($id);
-
-    $initialMessages = HydrateChat::handle($id);
-
-    return Inertia::render('Welcome', [
-        '_token' => csrf_token(),
-        'chatUrl' => route('chat-stream'),
-        'chatId' => $chat->id,
-        'initialMessages' => $initialMessages,
-    ]);
-})->name('stream');
-
-Route::post('/chat-stream', [ChatStreamController::class, 'handleChat'])->name('chat-stream');
-Route::post('/chat', [ChatController::class, 'handleChat'])->name('chat');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

@@ -2,7 +2,7 @@
 
 return [
     'provider' => env('PRISM_PROVIDER', 'ollama'),
-    'model' => env('PRISM_MODEL', 'gemma2:9b'),
+    'model' => env('PRISM_MODEL', 'llama3.1'),
     'prism_server' => [
         // The middleware that will be applied to the Prism Server routes.
         'middleware' => [],
